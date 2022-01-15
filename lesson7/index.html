@@ -20,14 +20,14 @@
             <div class="data">
                 <div class="salary">
                     <div class="salary-title title">Месячный доход*</div>
-                    <input type="text" class="salary-amount" placeholder="Сумма">
+                    <input type="text" class="salary-amount" placeholder="Сумма" oninput="inputonlynumber(this)">
                 </div>
 
                 <div class="income">
                     <div class="income-title title">Дополнительный доход</div>
                     <div class="income-items">
-                        <input type="text" class="income-title" placeholder="Наименование">
-                        <input type="text" class="income-amount" placeholder="Сумма">
+                        <input type="text" class="income-title" placeholder="Наименование" oninput="inputOnlyRussianText(this)">
+                        <input type="text" class="income-amount" placeholder="Сумма" oninput="inputonlynumber(this)">
                     </div>
 
                     <button class="btn_plus income_add">+</button>
@@ -35,15 +35,15 @@
 
                 <div class="additional_income">
                     <div class="additional_income-title title">Возможный доход</div>
-                    <input type="text" class="additional_income-item" placeholder="Наименование">
-                    <input type="text" class="additional_income-item" placeholder="Наименование">
+                    <input type="text" class="additional_income-item" placeholder="Наименование" oninput="inputOnlyRussianText(this)">
+                    <input type="text" class="additional_income-item" placeholder="Наименование" oninput="inputOnlyRussianText(this)">
                 </div>
 
                 <div class="expenses">
                     <div class="expenses-title title">Обязательные расходы</div>
                     <div class="expenses-items">
-                        <input type="text" class="expenses-title" placeholder="Наименование">
-                        <input type="text" class="expenses-amount" placeholder="Сумма">
+                        <input type="text" class="expenses-title" placeholder="Наименование" oninput="inputOnlyRussianText(this)">
+                        <input type="text" class="expenses-amount" placeholder="Сумма" oninput="inputonlynumber(this)">
                     </div>
 
                     <button class="btn_plus expenses_add">+</button>
@@ -67,14 +67,14 @@
                     <option value="other">Другой</option>
                 </select>
                     <div class="deposit-calc">
-                        <input type="text" class="deposit-amount" placeholder="Сумма">
-                        <input type="text" class="deposit-percent" placeholder="Процент" disabled>
+                        <input type="text" class="deposit-amount" placeholder="Сумма" oninput="inputonlynumber(this)">
+                        <input type="text" class="deposit-percent" placeholder="Процент">
                     </div>
                 </div>
 
                 <div class="target">
                     <span class="target-title title">Цель</span>
-                    <input type="text" class="target-amount" placeholder="Сумма">
+                    <input type="text" class="target-amount" placeholder="Сумма" oninput="inputonlynumber(this)">
                 </div>
 
                 <div class="period">
@@ -127,7 +127,7 @@
 
 
     </section>
-    <script src="/js-with-DOM/lesson7/main.js"></script>
+    <script src="./main.js"></script>
 </body>
 
 </html>
