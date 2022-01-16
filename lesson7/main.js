@@ -29,12 +29,12 @@ const
     targetAmount = document.querySelector('.target-amount'),
 
     periodAmount = document.querySelector('.period-amount'),
-    inputs = document.querySelectorAll('input'),
+
     inputsResult = document.querySelectorAll('.result-total');
 let
     incomeItems = document.querySelectorAll('.income-items'),
-    expensesItems = document.querySelectorAll('.expenses-items');
-
+    expensesItems = document.querySelectorAll('.expenses-items'),
+    inputs = document.querySelectorAll('input');
 
 const appData = {
     budget: 0,
@@ -128,10 +128,6 @@ const appData = {
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].disabled = true;
         }
-        for (let i = 0; i < incomeAmount.length; i++) {
-            incomeAmount[i].disabled = true;
-        }
-
         reset.style.display = 'inline'
         start.style.display = 'none'
         expensesPlus.style.display = 'none'
@@ -146,8 +142,18 @@ const appData = {
         }
         reset.style.display = 'none'
         start.style.display = 'inline'
-        expensesPlus.style.display = 'inline'
-        incomePlus.style.display = 'inline'
+
+
+        if (expensesItems.length === 3) {
+            expensesPlus.style.display = 'none'
+        } else {
+            expensesPlus.style.display = 'inline'
+        }
+        if (incomeItems.length === 3) {
+            incomePlus.style.display = 'none'
+        } else {
+            incomePlus.style.display = 'inline'
+        }
     },
     clear: function() {
         for (let i = 0; i < inputs.length; i++) {
@@ -201,6 +207,7 @@ const appData = {
         let cloneExpensesItem = expensesItems[0].cloneNode(true)
         expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus)
         expensesItems = document.querySelectorAll('.expenses-items');
+        inputs = document.querySelectorAll('input');
         if (expensesItems.length === 3) {
             expensesPlus.style.display = 'none'
         }
@@ -209,6 +216,7 @@ const appData = {
         let cloneIncomeItem = incomeItems[0].cloneNode(true)
         incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus)
         incomeItems = document.querySelectorAll('.income-items');
+        inputs = document.querySelectorAll('input');
         if (incomeItems.length === 3) {
             incomePlus.style.display = 'none'
         }
