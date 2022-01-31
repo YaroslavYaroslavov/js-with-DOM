@@ -1,6 +1,4 @@
 'use strict';
-
-
 const
     start = document.getElementById('start'),
     reset = document.getElementById('cancel'),
@@ -22,14 +20,11 @@ const
     incomeAmount = document.querySelectorAll('.income-amount'),
     expensesTitle = document.querySelector('.expenses-title'),
     expensesAmount = document.querySelector('.expenses-amount'),
-
     additionalExpenses = document.querySelector('.additional_expenses'),
     periodSelect = document.querySelector('.period-select'),
     additionalExpensesItem = document.querySelector('.additional_expenses-item'),
     targetAmount = document.querySelector('.target-amount'),
-
     periodAmount = document.querySelector('.period-amount'),
-
     inputsResult = document.querySelectorAll('.result-total');
 let
     incomeItems = document.querySelectorAll('.income-items'),
@@ -52,94 +47,58 @@ const appData = {
     expensesArrCount: [],
     precentDeposit: 0,
     moneyDeposit: 0,
-    asking: function() {
-
-        if (confirm('У вас есть дополнительный заработок')) {
-            let itemIncome = prompt('Какой у вас дополнительный заработок?')
-            let cashIncome;
-            do { cashIncome = prompt('Сколько в месяц вы на этом зарабатываете?') }
-            while (!isNumber(cashIncome));
-            appData.income[itemIncome] = cashIncome;
-        }
-        appData.addExpenses = prompt("Перечислите возможные расходы за рассчитываемый период через запятую");
-        appData.addExpenses = appData.addExpenses.toLowerCase().split(',');
-
-
-        appData.deposit = confirm("У вас есть депозит в банке?");
-    },
     showResult: function() {
-        budgetMonthValue.value = appData.budgetMonth;
-        budgetDayValue.value = appData.budgetDay;
-        expensesMonthValue.value = appData.expensesMonth;
-        additionalExpensesValue.value = appData.addExpenses.join(', ');
-        additionalIncomeValue.value = appData.addIncome.join(', ');
-        targetMonthValue.value = appData.getTargetMonth();
-        incomePeriodValue.value = appData.calcSavedMoney();
-
+        budgetMonthValue.value = this.budgetMonth;
+        budgetDayValue.value = this.budgetDay;
+        expensesMonthValue.value = this.expensesMonth;
+        additionalExpensesValue.value = this.addExpenses.join(', ');
+        additionalIncomeValue.value = this.addIncome.join(', ');
+        targetMonthValue.value = this.getTargetMonth();
+        incomePeriodValue.value = this.calcSavedMoney();
     },
     getBudget: function() {
-        appData.budgetMonth = appData.budget - appData.expensesMonth
-        appData.budgetDay = Math.ceil(appData.budgetMonth / 30);
+        this.budgetMonth = this.budget - this.expensesMonth
+        this.budgetDay = Math.ceil(this.budgetMonth / 30);
     },
     getTargetMonth: function() {
-        return Math.ceil(targetAmount.value / appData.budgetMonth);
-    },
-    getStatusIncome: function() {
-        if (appData.budgetDay < 0) {
-            console.log('Что-то пошло не так')
-        } else
-        if (appData.budgetDay <= 600) {
-            console.log('У вас низкий доход')
-        } else
-        if (appData.budgetDay > 600 && appData.budgetDay <= 1200) {
-            console.log('У вас средний уровень дохода')
-        } else console.log('У вас высокий уровень дохода')
+        return Math.ceil(targetAmount.value / this.budgetMonth);
     },
     getInfoDeposit: function() {
-        if (appData.deposit) {
-            do { appData.precentDeposit = prompt('Какой годовой процент?') }
-            while (!isNumber(appData.precentDeposit))
-            do { appData.moneyDeposit = prompt('Какая сумма заложена?') }
-            while (!isNumber(appData.moneyDeposit))
+        if (this.deposit) {
+            do { this.precentDeposit = prompt('Какой годовой процент?') }
+            while (!isNumber(this.precentDeposit))
+            do { this.moneyDeposit = prompt('Какая сумма заложена?') }
+            while (!isNumber(this.moneyDeposit))
         }
     },
     getExpensesMonth: function() {
-        for (let key in appData.expenses) {
-            appData.expensesMonth += +appData.expenses[key]
+        for (let key in this.expenses) {
+            this.expensesMonth += +this.expenses[key]
         }
     },
     getExpenses: function() {
         expensesItems.forEach(function(item) {
-            let itemExpenses = item.querySelector('.expenses-title').value;
-            let cashExpenses = item.querySelector('.expenses-amount').value;
+            const itemExpenses = item.querySelector('.expenses-title').value;
+            const cashExpenses = item.querySelector('.expenses-amount').value;
             if (itemExpenses !== '' && cashExpenses !== '') {
-                appData.expenses[itemExpenses] = cashExpenses;
+                this.expenses[itemExpenses] = cashExpenses;
 
             }
         });
     },
-    getIncome: function() {
-
-    },
     calcSavedMoney: function() {
-        return appData.budgetMonth * periodSelect.value;
+        return this.budgetMonth * periodSelect.value;
     },
     blockInput: function() {
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
+        inputs.forEach(item => item.disabled = true)
         reset.style.display = 'inline'
         start.style.display = 'none'
         expensesPlus.style.display = 'none'
         incomePlus.style.display = 'none'
     },
     unblockInput: function() {
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-        for (let i = 0; i < inputsResult.length; i++) {
-            inputsResult[i].disabled = true;
-        }
+        inputs.forEach(item => item.disabled = false)
+        inputsResult.forEach(item => item.disabled = true)
         reset.style.display = 'none'
         start.style.display = 'inline'
 
@@ -168,10 +127,10 @@ const appData = {
     },
     start: function() {
         if (salaryAmount.value) {
-            appData.budget = +salaryAmount.value;
+            inputs = document.querySelectorAll('input');
+            this.budget = +salaryAmount.value;
             this.getExpenses();
             this.getExpensesMonth();
-            // appData.asking(); 
             this.getAddExpenses();
             this.getAddIncome();
             this.getBudget();
@@ -190,7 +149,7 @@ const appData = {
         addExpenses.forEach(function(item) {
             item = item.trim();
             if (item !== '') {
-                appData.addExpenses.push(item);
+                this.addExpenses.push(item);
             }
         })
     },
@@ -198,16 +157,14 @@ const appData = {
         additionalIncomeItem.forEach(function(item) {
             let itemValue = item.value.trim();
             if (itemValue !== '') {
-                appData.addIncome.push(itemValue)
+                this.addIncome.push(itemValue)
             }
         })
     },
     addExpensesBlock: function() {
-
         let cloneExpensesItem = expensesItems[0].cloneNode(true)
         expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus)
         expensesItems = document.querySelectorAll('.expenses-items');
-        inputs = document.querySelectorAll('input');
         if (expensesItems.length === 3) {
             expensesPlus.style.display = 'none'
         }
@@ -216,7 +173,6 @@ const appData = {
         let cloneIncomeItem = incomeItems[0].cloneNode(true)
         incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus)
         incomeItems = document.querySelectorAll('.income-items');
-        inputs = document.querySelectorAll('input');
         if (incomeItems.length === 3) {
             incomePlus.style.display = 'none'
         }
@@ -232,7 +188,7 @@ start.addEventListener('click', appData.start.bind(appData));
 reset.addEventListener('click', appData.reset.bind(appData));
 expensesPlus.addEventListener('click', appData.addExpensesBlock)
 incomePlus.addEventListener('click', appData.addIncomesBlock)
-const inputonlynumber = e => {
+const inputOnlyNumber = e => {
     const value = e.value
     e.value = value.replace(/\D/g, '')
 }
@@ -240,6 +196,3 @@ const inputOnlyRussianText = e => {
     const value = e.value
     e.value = value.replace(/[^а-я А-Я , . ]/g, '')
 }
-if (appData.getTargetMonth() > 0) {
-    console.log("Цель будет достигнута через ", appData.getTargetMonth(), " месяцев")
-} else console.log("Цель не будет достигнута");
