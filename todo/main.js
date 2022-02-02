@@ -1,143 +1,92 @@
-document.addEventListener('change', function() {
-    const form = document.querySelector('.todo-control');
-    const headerInput = document.querySelector('.header-input');
-    const todoList = document.querySelector('#id');
-    const completedList = document.querySelector('#completed');
+const headerInput = document.querySelector('.header-input'),
+    addButton = document.querySelector('#add'),
+    todo = document.querySelector('#todo'),
+    completed = document.querySelector('#completed'),
+    todoRemove = document.querySelectorAll('.todo-remove'),
+    todoComplete = document.querySelector('.todo-complete');
 
-    //
-    let data = {
-        todo: [],
-        completed: []
-    }
+let data = {
+    todo: [],
+    completed: [],
+};
 
-    //
-    if (localStorage.getItem('localData')) {
-        data.JSON.parse(localStorage.getItem('localData'))
-    }
+const addItem = (name, item) => {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    const div = document.createElement('div');
+    const todoRemove = document.createElement('button');
+    const todoComplete = document.createElement('button');
+    li.classList.add('todo-item');
+    div.classList.add('todo-buttons');
+    todoRemove.classList.add('todo-remove');
+    todoComplete.classList.add('todo-complete');
 
-    //
-    const renderItemsForUpdate = function() {
-        if (!data.todo.length && !data.completed.length) return
+    div.appendChild(todoRemove);
+    div.appendChild(todoComplete);
+    li.appendChild(span);
+    li.appendChild(div);
 
-        for (let i = 0; i < data.todo.length; i++) {
-            renderItem(data.todo[i]);
+    span.textContent = headerInput.value || item;
+    if (span.textContent === '') {
+
+    } else {
+        if (name === todo) {
+            data.todo.push(span.textContent);
+            todo.insertAdjacentElement('afterbegin', li);
         }
-
-        for (let i = 0; i < data.completed.length; i++) {
-            renderItem(data.completed[i], true)
+        if (name === completed) {
+            data.completed.push(span.textContent);
+            completed.insertAdjacentElement('afterbegin', li);
         }
     }
+    headerInput.value = '';
+    saveUl();
 
-    //
-    const dataUpdateToLocalS = function() {
-        localStorage.setItem('localData', JSON.stringify(data));
-    }
+    todoRemove.addEventListener('click', () => removeItem(todoRemove.parentNode.parentNode));
+    todoComplete.addEventListener('click', () => completeTask(todoComplete.parentNode.parentNode));
+};
 
-    //
-    const addItem = function(text) {
-        renderItem(text);
-        headerInput.value = '';
-        data.todo.push(text);
+const completeTask = (todoComplete) => {
+    const todoItem = document.querySelectorAll('.todo-item');
+    todoItem.forEach(item => {
+        if (todoComplete.textContent === item.textContent) {
+            if (completed.contains(todoComplete)) {
+                data.todo.push(data.completed.splice(data.completed.indexOf(todoComplete.textContent), 1));
+                todo.insertAdjacentElement('afterbegin', todoComplete);
+            } else {
+                data.completed.push(data.todo.splice(data.todo.indexOf(todoComplete.textContent), 1));
+                completed.insertAdjacentElement('afterbegin', todoComplete);
+            };
+        };
+    });
+    saveUl();
+};
 
-        dataUpdateToLocalS()
-    }
+const removeItem = (todoDel) => {
+    const todoItem = document.querySelectorAll('.todo-item');
+    const whatToDel = (todo.contains(todoDel)) ? data.todo : data.completed;
+    todoItem.forEach(item => {
+        if (todoDel.textContent === item.textContent) {
+            whatToDel.splice(whatToDel.indexOf(todoDel.textContent), 1);
+            todoDel.remove();
+        };
+    });
+    saveUl();
+};
 
+const saveUl = () => {
+    const arrTodo = data.todo,
+        arrCompleted = data.completed;
+    localStorage.setItem('todo', arrTodo);
+    localStorage.setItem('completed', arrCompleted);
+};
 
-    const itemRemove = function(elem) {
-        const item = elem.parentNode.parentNode;
-        const itemParent = item.parentNode;
-        const id = itemParent.id;
-        const text = item.textContent;
+addButton.addEventListener('click', () => addItem(todo));
+headerInput.addEventListener('keydown', (e) => { if (e.keyCode == 13) addItem(todo); });
 
-        if (id === 'todo') {
-            data.todo.splice(data.todo.indexOf(text), 1)
-        } else {
-            data.completed.splice(data.completed.indexOf(text), 1)
-        }
-
-        itemParent.removeChild(item)
-
-        dataUpdateToLocalS();
-    }
-
-
-    const ItemComplete = function(elem) {
-        const item = elem.parentNode.parentNode;
-        const itemParent = item.parentNode;
-        const id = itemParent.id
-        const text = item.textContent;
-
-        let target;
-
-        if (id === 'todo') {
-            target = completedList;
-        } else {
-            target = todoList;
-        }
-
-        if (id === 'todo') {
-            data.todo.splice(data.todo.indexOf(text), 1);
-            data.completed.push(text);
-        } else {
-            data.completed.splice(data.completed.indexOf(text), 1);
-            data.todo.push(text)
-        }
-
-        itemParent.removeChild(item);
-        target.insertBefore(item, target.childNodes[0]);
-
-        dataUpdateToLocalS()
-    }
-
-
-    const renderItem = function(text, completed = false) {
-        const item = document.createElement('li')
-        const btnBlock = document.createElement('div')
-        const btnRemove = document.createElement('button');
-        const btnComplete = document.createElement('button');
-
-        let list = todoList;
-
-        if (completed) {
-            list = completedList;
-        } else {
-            list = todoList;
-        }
-
-        item.classList.add('todo-item')
-        btnBlock.classList.add('todo-buttons')
-        btnRemove.classList.add('todo-remove')
-        btnComplete.classList.add('todo-complete')
-
-
-        btnRemove.addEventListener('click', function(event) {
-            itemRemove(event.target)
-        })
-
-        btnComplete.addEventListener('click', function(event) {
-            ItemComplete(event.target)
-        })
-
-        item.textContent = text;
-
-        btnBlock.appendChild(btnRemove)
-        btnBlock.appendChild(btnComplete)
-        item.appendChild(btnBlock)
-
-        list.insertBefore(item, list.childNodes);
-    }
-
-
-    //
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        if (headerInput.value !== '') {
-            addItem(headerInput.value.trim())
-        }
-    })
-
-
-    renderItemsForUpdate()
-
-})
+document.addEventListener("DOMContentLoaded", () => {
+    const todoArr = localStorage.getItem('todo');
+    const completedArr = localStorage.getItem('completed');
+    todoArr != '' && todoArr.split(',').map(item => addItem(todo, item));
+    completedArr != '' && completedArr.split(',').map(item => addItem(completed, item));
+});
