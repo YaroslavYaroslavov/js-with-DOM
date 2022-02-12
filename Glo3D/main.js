@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let timeRemaining = endPromo.getTime() - now.getTime()
 
-    function timeRemained() {
+    function promoTimer() {
         now = new Date();
         if (timeRemaining > 0) {
             let seconds = (Math.floor(timeRemaining / 1000) % 60)
@@ -36,5 +36,40 @@ document.addEventListener('DOMContentLoaded', () => {
             timeRemaining = 86400000;
         }
     }
-    setInterval(timeRemained, 1000)
+    setInterval(promoTimer, 1000)
+
+    function toggleMenu() {
+        const btnMenu = document.querySelector('.menu'),
+            menu = document.querySelector('menu'),
+            btnCloseMenu = document.querySelector('.close-btn'),
+            menuItems = menu.querySelectorAll('ul>li'),
+            handlerMenu = () => {
+                menu.classList.toggle('active-menu')
+            };
+        btnMenu.addEventListener('click', handlerMenu)
+        btnCloseMenu.addEventListener('click', handlerMenu)
+        menuItems.forEach((item) => {
+            item.addEventListener('click', handlerMenu)
+        })
+
+    }
+    toggleMenu();
+
+    function togglePopUp() {
+        let i = 0.1;
+        const popUp = document.querySelector('.popup'),
+            popUpBtn = document.querySelectorAll('.popup-btn'),
+            popUpCloseBtn = document.querySelector('.popup-close');
+
+        popUpBtn.forEach((item) => {
+            item.addEventListener('click', () => {
+                popUp.style.display = 'block';
+            })
+        })
+        popUpCloseBtn.addEventListener('click', () => {
+            popUp.style.display = 'none';
+        })
+
+    };
+    togglePopUp();
 })
