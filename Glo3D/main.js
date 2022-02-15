@@ -220,4 +220,66 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     changePhoto()
 
+    const calc = (price = 100) => {
+        const calcBlock = document.querySelector('.calc-block'),
+            calcType = document.querySelector('.calc-type'),
+            calcSquare = document.querySelector('.calc-square'),
+            calcDay = document.querySelector('.calc-day'),
+            calcCount = document.querySelector('.calc-count'),
+            totalValue = document.getElementById('total');
+
+
+        const countSum = () => {
+            let total = 0,
+                countValue = 1,
+
+                dayValue = 1,
+                totalTmp = -1;
+            let anim;
+            total = 0
+            totalTmp = -1
+            clearInterval(anim)
+            const typeValue = calcType.options[calcType.selectedIndex].value,
+                squareValue = +calcSquare.value;
+            if (calcCount.value > 1) {
+                countValue += (calcCount.value - 1) / 10;
+            }
+            if (calcDay.value && calcDay.value < 5) {
+                dayValue *= 2;
+            } else if (calcDay.value && calcDay.value < 10) {
+                dayValue *= 1.5;
+            }
+            if (typeValue && squareValue) {
+                total = price * typeValue * squareValue * countValue * dayValue;
+            }
+
+            function stopAnimate() {
+                if (totalTmp === total || total === 0) {
+                    clearInterval(anim)
+                }
+            }
+
+            function animate() {
+                totalTmp++
+                totalValue.textContent = totalTmp
+                stopAnimate()
+            }
+            anim = setInterval(animate, 10)
+        };
+
+        calcBlock.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                countSum()
+            }
+        });
+        calcBlock.addEventListener('input', (event) => {
+            const target = event.target;
+            if (!target.matches('.calc-count, .calc-square, .calc-count, .calc-day')) return;
+            else {
+                target.value = target.value.replace(/\D/g, '');
+            }
+        })
+
+    };
+    calc()
 })
