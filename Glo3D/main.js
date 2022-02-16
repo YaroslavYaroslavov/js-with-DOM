@@ -227,18 +227,20 @@ document.addEventListener('DOMContentLoaded', () => {
             calcDay = document.querySelector('.calc-day'),
             calcCount = document.querySelector('.calc-count'),
             totalValue = document.getElementById('total');
-
+        let anim;
 
         const countSum = () => {
             let total = 0,
                 countValue = 1,
-
                 dayValue = 1,
                 totalTmp = -1;
-            let anim;
+
+            if (anim) {
+                clearInterval(anim)
+            }
+
             total = 0
             totalTmp = -1
-            clearInterval(anim)
             const typeValue = calcType.options[calcType.selectedIndex].value,
                 squareValue = +calcSquare.value;
             if (calcCount.value > 1) {
@@ -262,7 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
             function animate() {
                 totalTmp++
                 totalValue.textContent = totalTmp
-                stopAnimate()
+                if (totalTmp === total || total === 0) {
+                    clearInterval(anim)
+                }
             }
             anim = setInterval(animate, 10)
         };
